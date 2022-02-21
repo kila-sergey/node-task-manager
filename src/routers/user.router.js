@@ -18,7 +18,6 @@ router.post("/users/login", async (req, res) => {
       req.body.password
     );
     const token = await user.generateJwtToken();
-    console.log("user", user.getPublicData());
     res.send({ user: await user.getPublicData(), token });
   } catch (err) {
     res.status(ERROR.BAD_REQUEST).send({ error: err.message });
