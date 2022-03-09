@@ -2,6 +2,7 @@ const express = require("express");
 const taskRouter = require("./routers/task.router");
 const userRouter = require("./routers/user.router");
 
+require("dotenv").config();
 require("./db/mongoose");
 
 const app = express();

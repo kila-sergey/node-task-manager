@@ -7,7 +7,6 @@ const {
   TASK_MODEL_NAME,
   USER_MODEL_SCHEMA,
   PASSWORD_HASH_SALT_ROUNDS,
-  JWT_SECRET_PHRASE,
 } = require("../constants/models");
 const { Task } = require("./task");
 
@@ -78,9 +77,13 @@ userSchema.methods.getPublicData = async function () {
 };
 
 userSchema.methods.generateJwtToken = async function () {
-  const token = jwt.sign({ _id: this.id.toString() }, JWT_SECRET_PHRASE, {
-    expiresIn: "7 days",
-  });
+  const token = jwt.sign(
+    { _id: this.id.toString() },
+    process.env.JWT_SECRET_PHRASE,
+    {
+      expiresIn: "7 days",
+    }
+  );
 
   this.tokens = [...this.tokens, { token }];
 

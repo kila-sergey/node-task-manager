@@ -11,7 +11,6 @@ const authMiddleware = require("../middlewares/auth");
 
 const router = express.Router();
 
-//Create task
 router.post("/tasks", authMiddleware, async (req, res) => {
   const task = new Task({ ...req.body, createdBy: req.user._id });
 
@@ -23,10 +22,6 @@ router.post("/tasks", authMiddleware, async (req, res) => {
   }
 });
 
-//Get all tasks
-//get /tasks?isCompleted=true
-//get /tasks?limit=10&skip=2
-//get /tasks?sortBy=createdAt:desc
 router.get("/tasks", authMiddleware, async (req, res) => {
   const user = req.user;
   //Filter params
@@ -57,6 +52,7 @@ router.get("/tasks", authMiddleware, async (req, res) => {
       },
     });
     const tasksList = populatedUser.tasks;
+
     res.send({
       data: tasksList,
       metaInfo: {
@@ -69,22 +65,22 @@ router.get("/tasks", authMiddleware, async (req, res) => {
   }
 });
 
-//Get task
 router.get("/tasks/:id", authMiddleware, async (req, res) => {
   const taskId = req.params.id;
   const userId = req.user._id;
   try {
     const searchedTask = await Task.findOne({ _id: taskId, createdBy: userId });
+
     if (!searchedTask) {
       return res.status(ERROR.NOT_FOUND).send();
     }
+
     res.send(searchedTask);
   } catch (err) {
     res.status(ERROR.SERVER_ERROR).send(err);
   }
 });
 
-//Update task
 router.patch("/tasks/:id", authMiddleware, async (req, res) => {
   const taskId = req.params.id;
   const userId = req.user._id;
@@ -112,14 +108,15 @@ router.patch("/tasks/:id", authMiddleware, async (req, res) => {
     updatedParams.forEach((updatedParam) => {
       task[updatedParam] = req.body[updatedParam];
     });
+
     const newTask = await task.save();
+
     res.send(newTask);
   } catch (err) {
     res.status(ERROR.BAD_REQUEST).send(err);
   }
 });
 
-//Delete task
 router.delete("/tasks/:id", authMiddleware, async (req, res) => {
   const taskId = req.params.id;
   const userId = req.user._id;
@@ -128,9 +125,11 @@ router.delete("/tasks/:id", authMiddleware, async (req, res) => {
       _id: taskId,
       createdBy: userId,
     });
+
     if (!deletedTask) {
       return res.status(ERROR.NOT_FOUND).send({ error: "Task not found" });
     }
+
     res.send(deletedTask);
   } catch (err) {
     res.status(ERROR.SERVER_ERROR).send(err);
