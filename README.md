@@ -4,3 +4,4 @@ Getting started as a developer:
 - launch app locally: write the following command to Terminal `npm run dev`
 - connect MongoDB with Robo3T to manage database with UI:
   - create new connection (`name:Local MongoDB`, `address:localhost:27017`)
+- create .env file with properies (`DB_URL`, `JWT_SECRET_PHRASE`)
